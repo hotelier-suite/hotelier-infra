@@ -39,13 +39,10 @@ services:
       context: ../hotelier-backend
     container_name: hotelier-backend-dev
     restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
     environment:
-      NODE_ENV: ${NODE_ENV}
       PORT: ${API_PORT}
-      DATABASE_URL: ${DATABASE_URL}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
-      REFRESH_TOKEN_EXPIRES_IN: ${REFRESH_TOKEN_EXPIRES_IN}
     ports:
       - "${API_PORT}:${API_PORT}"
     volumes:
@@ -66,13 +63,10 @@ services:
       context: ../hotelier-frontend
     container_name: hotelier-frontend-dev
     restart: unless-stopped
+    env_file:
+      - ../hotelier-frontend/.env.docker
     environment:
-      NODE_ENV: ${NODE_ENV}
       PORT: ${APP_PORT}
-      NEXT_PUBLIC_API_URL: ${API_URL}
-      INTERNAL_API_URL: http://backend:${API_PORT}/api
-      NEXT_PUBLIC_APP_URL: ${FRONTEND_URL}
-      WATCHPACK_POLLING: ${WATCHPACK_POLLING}
     ports:
       - "${APP_PORT}:${APP_PORT}"
     volumes:

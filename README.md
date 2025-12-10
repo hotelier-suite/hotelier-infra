@@ -100,26 +100,32 @@ git clone https://github.com/hotelier-suite/hotelier-frontend.git
 git clone https://github.com/hotelier-suite/hotelier-infra.git
 ```
 
-### 3. Configure environment variables
+### 3. Configure environment variables (standard flow)
 
-In `hotelier-infra/`:
+Follow these steps to run the full stack using `hotelier-infra`:
 
-1. Copy the example env file:
+1. Clone the three sibling repositories:
+   - `hotelier-backend`
+   - `hotelier-frontend`
+   - `hotelier-infra`
+2. In `hotelier-backend/`, create a Docker-specific env file based on the example:
    ```bash
-   cd hotelier-infra
+   cp .env.docker.example .env.docker
+   ```
+3. In `hotelier-frontend/`, create a Docker-specific env file based on the example:
+   ```bash
+   cp .env.docker.example .env.docker
+   ```
+4. In `hotelier-infra/`, create the shared env file:
+   ```bash
    cp .env.example .env
    ```
-2. Adjust any values if needed (ports, URLs, passwords, etc.).
+5. From `hotelier-infra/`, start the full stack:
+   ```bash
+   docker compose up --build
+   ```
 
-> **Important:** `.env` is **git-ignored** and should never be committed. Only `.env.example` is tracked in Git.
-
-### 4. Start the full stack
-
-From inside `hotelier-infra/`:
-
-```bash
-docker compose up --build
-```
+> **Important:** All `.env` / `.env.docker` files are **git-ignored** and should never be committed. Only the `*.example` templates are tracked in Git.
 
 Docker will:
 
@@ -144,7 +150,14 @@ docker compose down -v
 
 ## ⚙️ Environment Configuration
 
-All environment variables for the local stack live in `hotelier-infra/.env` (based on `.env.example`). Key variables:
+The environment configuration is split between:
+
+- **Infra-level wiring** (this repo): `hotelier-infra/.env` (based on `.env.example`)
+- **Service-level settings** (each repo): `.env` / `.env.docker` files
+
+### Infra-level env (`hotelier-infra/.env`)
+
+This file only contains **shared wiring values** such as database credentials, ports, and public URLs:
 
 ```env
 # PostgreSQL
@@ -158,23 +171,28 @@ DATABASE_URL=postgresql://hotelier_dev:hotelier_dev_password@postgres:5432/hotel
 PGADMIN_EMAIL=admin@hotelier.dev
 PGADMIN_PASSWORD=admin123
 
-# Backend
-NODE_ENV=development
+# Ports
 API_PORT=3001
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
-JWT_EXPIRES_IN=15m
-REFRESH_TOKEN_EXPIRES_IN=7d
-
-# Frontend
 APP_PORT=3000
+
+# Public URLs
 FRONTEND_URL=http://localhost:3000
 API_URL=http://localhost:3001/api
-WATCHPACK_POLLING=true
-NEXT_PUBLIC_API_URL=http://localhost:3001/api
-NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-These values are injected into the containers via `docker compose` and should be kept **local** to each developer. Production secrets should live in a **secret manager** / CI and **never** in this repo.
+### Service-level envs
+
+- **Backend (`hotelier-backend`)**
+  - `.env.example` – template for running the backend standalone.
+  - `.env.docker.example` – template for Docker/`hotelier-infra` usage.
+  - `.env.docker` – local Docker env file (ignored by Git), referenced from `compose.yaml`.
+
+- **Frontend (`hotelier-frontend`)**
+  - `.env` / `.env.local` – for standalone Next.js development.
+  - `.env.docker.example` – template for Docker/`hotelier-infra` usage.
+  - `.env.docker` – local Docker env file (ignored by Git), referenced from `compose.yaml`.
+
+`docker compose` loads the per-service `.env.docker` files and combines them with the wiring values from `hotelier-infra/.env`. Production secrets should live in a **secret manager** / CI and **never** in this repo.
 
 ---
 
