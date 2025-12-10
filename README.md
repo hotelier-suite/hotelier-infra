@@ -1,0 +1,281 @@
+# 🏨 Hotelier Infra - Local Development Environment
+
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+
+**Hotelier Infra** is the orchestration repository for the **Hotelier Suite**. It provides a single Docker Compose setup to run the entire local environment:
+
+- PostgreSQL database
+- pgAdmin UI
+- Hotelier Backend API (NestJS)
+- Hotelier Frontend (Next.js)
+
+This repo is intentionally lightweight and focuses only on **local development & onboarding**.
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Related Repositories](#-related-repositories)
+- [Folder Layout](#-folder-layout)
+- [Getting Started](#-getting-started)
+- [Environment Configuration](#-environment-configuration)
+- [Running the Stack](#-running-the-stack)
+- [Available Services](#-available-services)
+- [Useful Docker Commands](#-useful-docker-commands)
+- [Future Evolution](#-future-evolution)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Developer](#-developer)
+
+---
+
+## 🔍 Overview
+
+This repository contains the **Docker Compose configuration** and shared **environment variables** required to spin up the full Hotelier Suite locally with a single command.
+
+- Builds the **backend** and **frontend** directly from their sibling repositories
+- Mounts the `src` directories for live code reload during development
+- Provides a local PostgreSQL instance and pgAdmin for database management
+
+> **Goal:** New developers should be able to clone three repos, copy one env file, and immediately run the entire stack.
+
+---
+
+## 🔗 Related Repositories
+
+- **Backend API:** `hotelier-backend`
+- **Frontend Application:** `hotelier-frontend`
+
+All three repositories live under the same GitHub organization:
+
+- `hotelier-suite/hotelier-backend`
+- `hotelier-suite/hotelier-frontend`
+- `hotelier-suite/hotelier-infra` _(this repo)_
+
+---
+
+## 🗂️ Folder Layout
+
+For local development, the recommended directory structure is:
+
+```bash
+hotelier-suite/                # Just a folder on your machine (not a repo)
+  hotelier-backend/           # git clone https://github.com/hotelier-suite/hotelier-backend.git
+  hotelier-frontend/          # git clone https://github.com/hotelier-suite/hotelier-frontend.git
+  hotelier-infra/             # git clone https://github.com/hotelier-suite/hotelier-infra.git
+    compose.yaml
+    .env.example
+```
+
+The `compose.yaml` in `hotelier-infra` assumes this **sibling layout** and uses relative paths like:
+
+- `../hotelier-backend` as the backend build context
+- `../hotelier-frontend` as the frontend build context
+
+If you change the folder layout, you must update `compose.yaml` accordingly.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+
+- **Docker** and **Docker Compose v2** installed
+- **Git** installed
+
+### 2. Clone the repositories
+
+From your workspace directory:
+
+```bash
+mkdir hotelier-suite
+cd hotelier-suite
+
+# Clone backend, frontend, and infra
+git clone https://github.com/hotelier-suite/hotelier-backend.git
+git clone https://github.com/hotelier-suite/hotelier-frontend.git
+git clone https://github.com/hotelier-suite/hotelier-infra.git
+```
+
+### 3. Configure environment variables
+
+In `hotelier-infra/`:
+
+1. Copy the example env file:
+   ```bash
+   cd hotelier-infra
+   cp .env.example .env
+   ```
+2. Adjust any values if needed (ports, URLs, passwords, etc.).
+
+> **Important:** `.env` is **git-ignored** and should never be committed. Only `.env.example` is tracked in Git.
+
+### 4. Start the full stack
+
+From inside `hotelier-infra/`:
+
+```bash
+docker compose up --build
+```
+
+Docker will:
+
+- Build the backend image from `../hotelier-backend`
+- Build the frontend image from `../hotelier-frontend`
+- Start PostgreSQL and pgAdmin
+- Wire all containers together with the correct network and environment variables
+
+To stop the stack:
+
+```bash
+docker compose down
+```
+
+To stop and remove volumes (including database data):
+
+```bash
+docker compose down -v
+```
+
+---
+
+## ⚙️ Environment Configuration
+
+All environment variables for the local stack live in `hotelier-infra/.env` (based on `.env.example`). Key variables:
+
+```env
+# PostgreSQL
+POSTGRES_DB=hotelier_dev
+POSTGRES_USER=hotelier_dev
+POSTGRES_PASSWORD=hotelier_dev_password
+POSTGRES_PORT=5432
+DATABASE_URL=postgresql://hotelier_dev:hotelier_dev_password@postgres:5432/hotelier_dev
+
+# pgAdmin
+PGADMIN_EMAIL=admin@hotelier.dev
+PGADMIN_PASSWORD=admin123
+
+# Backend
+NODE_ENV=development
+API_PORT=3001
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_EXPIRES_IN=15m
+REFRESH_TOKEN_EXPIRES_IN=7d
+
+# Frontend
+APP_PORT=3000
+FRONTEND_URL=http://localhost:3000
+API_URL=http://localhost:3001/api
+WATCHPACK_POLLING=true
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+These values are injected into the containers via `docker compose` and should be kept **local** to each developer. Production secrets should live in a **secret manager** / CI and **never** in this repo.
+
+---
+
+## 🧩 Running the Stack
+
+The `compose.yaml` file defines four main services:
+
+- **postgres** – Core PostgreSQL database for the platform
+- **pgadmin** – Web UI to inspect and manage the database
+- **backend** – NestJS API from `hotelier-backend`
+- **frontend** – Next.js app from `hotelier-frontend`
+
+### Hot reload for backend & frontend
+
+The compose file mounts the `src` folders from the sibling repos into the containers:
+
+- `../hotelier-backend/src:/app/src`
+- `../hotelier-frontend/src:/app/src`
+
+This allows you to edit code in your local IDE while the containers are running and see changes without rebuilding the images.
+
+---
+
+## 🌐 Available Services
+
+Once `docker compose up` is running, by default you get:
+
+- **Frontend:** `http://localhost:3000`
+- **Backend API:** `http://localhost:3001/api`
+- **pgAdmin:** `http://localhost:5050`
+  - Email: value from `PGADMIN_EMAIL`
+  - Password: value from `PGADMIN_PASSWORD`
+- **PostgreSQL:** `localhost:5432`
+  - Database: `POSTGRES_DB`
+  - User: `POSTGRES_USER`
+  - Password: `POSTGRES_PASSWORD`
+
+If you change ports in `.env`, the exposed URLs will adjust accordingly.
+
+---
+
+## 🧰 Useful Docker Commands
+
+From inside `hotelier-infra/`:
+
+```bash
+# Start all services (build if needed)
+docker compose up --build
+
+# Start in detached mode
+docker compose up -d
+
+# View logs for all services
+docker compose logs -f
+
+# View logs for a single service
+docker compose logs -f backend
+
+# Stop services (keep volumes)
+docker compose down
+
+# Stop services and remove volumes (DB data)
+docker compose down -v
+```
+
+If you run into strange issues, you can also prune unused Docker resources (be careful, this is global):
+
+```bash
+docker system prune -a
+```
+
+---
+
+## 🧭 Future Evolution
+
+As the Hotelier platform evolves into a **microservices architecture**, this repository can be extended to:
+
+- Add additional services (auth-service, booking-service, notification-service, etc.)
+- Provide multiple compose files (e.g. `compose.dev.yaml`, `compose.microservices.yaml`)
+- Integrate with local message brokers, caches, and analytics stacks
+
+The goal is to keep **all local orchestration** in one place so onboarding remains simple even as the system grows.
+
+---
+
+## 🤝 Contributing
+
+This repository is part of the Hotelier Suite portfolio project and primarily serves as a **local development helper**. Suggestions for improving the developer experience, onboarding, or Docker setup are welcome.
+
+---
+
+## 📄 License
+
+This project is private and for portfolio demonstration purposes.
+
+---
+
+## 👨‍💻 Developer
+
+**Juan Nicolas Pardo Torres**
+
+- LinkedIn: [nicolas-pardo-6156a1222](https://linkedin.com/in/nicolas-pardo-6156a1222)
+- GitHub: [@Nick220505](https://github.com/Nick220505)
+- Email: juannicolaspardo@gmail.com
