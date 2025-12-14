@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17
+    image: postgres:18
     container_name: hotelier-postgres-dev
     restart: unless-stopped
     environment:
@@ -13,11 +13,48 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U hotelier_dev -d hotelier_dev"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
       retries: 20
       start_period: 10s
+
+  auth-postgres:
+    image: postgres:18
+    container_name: hotelier-auth-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${AUTH_POSTGRES_DB}
+      POSTGRES_USER: ${AUTH_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AUTH_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - auth_postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "${AUTH_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${AUTH_POSTGRES_USER} -d ${AUTH_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: hotelier-rabbitmq-dev
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   pgadmin:
     image: dpage/pgadmin4
@@ -58,6 +95,25 @@ services:
       retries: 5
       start_period: 60s
 
+  auth-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-auth-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      AUTH_DATABASE_URL: postgresql://${AUTH_POSTGRES_USER}:${AUTH_POSTGRES_PASSWORD}@auth-postgres:5432/${AUTH_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start auth-service --watch"]
+    volumes:
+      - ../hotelier-backend/src:/app/src
+      - /app/node_modules
+    depends_on:
+      auth-postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
   frontend:
     build:
       context: ../hotelier-frontend
@@ -78,4 +134,5 @@ services:
 
 volumes:
   postgres_dev_data:
+  auth_postgres_dev_data:
   pgadmin_data:
