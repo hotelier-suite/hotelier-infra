@@ -1,7 +1,7 @@
 services:
-  postgres:
+  backend-db:
     image: postgres:18
-    container_name: hotelier-postgres-dev
+    container_name: hotelier-backend-db-dev
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - postgres_dev_data:/var/lib/postgresql/data
+      - backend_db_data:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_PORT}:5432"
     healthcheck:
@@ -19,9 +19,9 @@ services:
       retries: 20
       start_period: 10s
 
-  auth-postgres:
+  auth-service-db:
     image: postgres:18
-    container_name: hotelier-auth-postgres-dev
+    container_name: hotelier-auth-service-db-dev
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${AUTH_POSTGRES_DB}
@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: ${AUTH_POSTGRES_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - auth_postgres_dev_data:/var/lib/postgresql/data
+      - auth_service_db_data:/var/lib/postgresql/data
     ports:
       - "${AUTH_POSTGRES_PORT}:5432"
     healthcheck:
@@ -37,6 +37,30 @@ services:
         [
           "CMD-SHELL",
           "pg_isready -U ${AUTH_POSTGRES_USER} -d ${AUTH_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  config-service-db:
+    image: postgres:18
+    container_name: hotelier-config-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${CONFIG_POSTGRES_DB}
+      POSTGRES_USER: ${CONFIG_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${CONFIG_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - config_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${CONFIG_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${CONFIG_POSTGRES_USER} -d ${CONFIG_POSTGRES_DB}",
         ]
       interval: 5s
       timeout: 3s
@@ -69,7 +93,7 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - postgres
+      - backend-db
 
   backend:
     build:
@@ -86,7 +110,7 @@ services:
       - ../hotelier-backend/src:/app/src
       - /app/node_modules
     depends_on:
-      postgres:
+      backend-db:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:${API_PORT}/api || exit 1"]
@@ -103,13 +127,32 @@ services:
     env_file:
       - ../hotelier-backend/.env.docker
     environment:
-      AUTH_DATABASE_URL: postgresql://${AUTH_POSTGRES_USER}:${AUTH_POSTGRES_PASSWORD}@auth-postgres:5432/${AUTH_POSTGRES_DB}
+      AUTH_DATABASE_URL: postgresql://${AUTH_POSTGRES_USER}:${AUTH_POSTGRES_PASSWORD}@auth-service-db:5432/${AUTH_POSTGRES_DB}
     command: ["sh", "-c", "npx nest start auth-service --watch"]
     volumes:
       - ../hotelier-backend/src:/app/src
       - /app/node_modules
     depends_on:
-      auth-postgres:
+      auth-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  config-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-config-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      CONFIG_DATABASE_URL: postgresql://${CONFIG_POSTGRES_USER}:${CONFIG_POSTGRES_PASSWORD}@config-service-db:5432/${CONFIG_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start config-service --watch"]
+    volumes:
+      - ../hotelier-backend/src:/app/src
+      - /app/node_modules
+    depends_on:
+      config-service-db:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
@@ -133,6 +176,7 @@ services:
         condition: service_healthy
 
 volumes:
-  postgres_dev_data:
-  auth_postgres_dev_data:
+  backend_db_data:
+  auth_service_db_data:
+  config_service_db_data:
   pgadmin_data:
