@@ -155,7 +155,8 @@ services:
     ports:
       - "${API_PORT}:${API_PORT}"
     volumes:
-      - ../hotelier-backend/src:/app/src
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
       - /app/node_modules
     depends_on:
       backend-db:
@@ -180,7 +181,8 @@ services:
       AUTH_DATABASE_URL: postgresql://${AUTH_POSTGRES_USER}:${AUTH_POSTGRES_PASSWORD}@auth-service-db:5432/${AUTH_POSTGRES_DB}
     command: ["sh", "-c", "npx nest start auth-service --watch"]
     volumes:
-      - ../hotelier-backend/src:/app/src
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
       - /app/node_modules
     depends_on:
       auth-service-db:
@@ -199,7 +201,8 @@ services:
       CONFIG_DATABASE_URL: postgresql://${CONFIG_POSTGRES_USER}:${CONFIG_POSTGRES_PASSWORD}@config-service-db:5432/${CONFIG_POSTGRES_DB}
     command: ["sh", "-c", "npx nest start config-service --watch"]
     volumes:
-      - ../hotelier-backend/src:/app/src
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
       - /app/node_modules
     depends_on:
       config-service-db:
@@ -218,7 +221,8 @@ services:
       PARKING_DATABASE_URL: postgresql://${PARKING_POSTGRES_USER}:${PARKING_POSTGRES_PASSWORD}@parking-service-db:5432/${PARKING_POSTGRES_DB}
     command: ["sh", "-c", "npx nest start parking-service --watch"]
     volumes:
-      - ../hotelier-backend/src:/app/src
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
       - /app/node_modules
     depends_on:
       parking-service-db:
@@ -237,7 +241,8 @@ services:
       NOTIFICATIONS_DATABASE_URL: postgresql://${NOTIFICATIONS_POSTGRES_USER}:${NOTIFICATIONS_POSTGRES_PASSWORD}@notifications-service-db:5432/${NOTIFICATIONS_POSTGRES_DB}
     command: ["sh", "-c", "npx nest start notifications-service --watch"]
     volumes:
-      - ../hotelier-backend/src:/app/src
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
       - /app/node_modules
     depends_on:
       notifications-service-db:
