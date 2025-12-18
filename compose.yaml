@@ -115,6 +115,30 @@ services:
       retries: 20
       start_period: 10s
 
+  guest-requests-service-db:
+    image: postgres:18
+    container_name: hotelier-guest-requests-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${GUEST_REQUESTS_POSTGRES_DB}
+      POSTGRES_USER: ${GUEST_REQUESTS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${GUEST_REQUESTS_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - guest_requests_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${GUEST_REQUESTS_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${GUEST_REQUESTS_POSTGRES_USER} -d ${GUEST_REQUESTS_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: hotelier-rabbitmq-dev
@@ -250,6 +274,26 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  guest-requests-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-guest-requests-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      GUEST_REQUESTS_DATABASE_URL: postgresql://${GUEST_REQUESTS_POSTGRES_USER}:${GUEST_REQUESTS_POSTGRES_PASSWORD}@guest-requests-service-db:5432/${GUEST_REQUESTS_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start guest-requests-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      guest-requests-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
   frontend:
     build:
       context: ../hotelier-frontend
@@ -274,4 +318,5 @@ volumes:
   config_service_db_data:
   parking_service_db_data:
   notifications_service_db_data:
+  guest_requests_service_db_data:
   pgadmin_data:
