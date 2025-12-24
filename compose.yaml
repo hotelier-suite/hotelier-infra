@@ -187,6 +187,222 @@ services:
       retries: 20
       start_period: 10s
 
+  booking-service-db:
+    image: postgres:18
+    container_name: hotelier-booking-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${BOOKING_POSTGRES_DB}
+      POSTGRES_USER: ${BOOKING_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${BOOKING_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - booking_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${BOOKING_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${BOOKING_POSTGRES_USER} -d ${BOOKING_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  operations-service-db:
+    image: postgres:18
+    container_name: hotelier-operations-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${OPERATIONS_POSTGRES_DB}
+      POSTGRES_USER: ${OPERATIONS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${OPERATIONS_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - operations_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${OPERATIONS_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${OPERATIONS_POSTGRES_USER} -d ${OPERATIONS_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  events-service-db:
+    image: postgres:18
+    container_name: hotelier-events-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${EVENTS_POSTGRES_DB}
+      POSTGRES_USER: ${EVENTS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${EVENTS_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - events_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${EVENTS_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${EVENTS_POSTGRES_USER} -d ${EVENTS_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  restaurant-service-db:
+    image: postgres:18
+    container_name: hotelier-restaurant-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${RESTAURANT_POSTGRES_DB}
+      POSTGRES_USER: ${RESTAURANT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${RESTAURANT_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - restaurant_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${RESTAURANT_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${RESTAURANT_POSTGRES_USER} -d ${RESTAURANT_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  recreational-service-db:
+    image: postgres:18
+    container_name: hotelier-recreational-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${RECREATIONAL_POSTGRES_DB}
+      POSTGRES_USER: ${RECREATIONAL_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${RECREATIONAL_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - recreational_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${RECREATIONAL_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${RECREATIONAL_POSTGRES_USER} -d ${RECREATIONAL_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  billing-service-db:
+    image: postgres:18
+    container_name: hotelier-billing-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${BILLING_POSTGRES_DB}
+      POSTGRES_USER: ${BILLING_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${BILLING_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - billing_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${BILLING_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${BILLING_POSTGRES_USER} -d ${BILLING_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  reports-service-db:
+    image: postgres:18
+    container_name: hotelier-reports-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${REPORTS_POSTGRES_DB}
+      POSTGRES_USER: ${REPORTS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${REPORTS_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - reports_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${REPORTS_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${REPORTS_POSTGRES_USER} -d ${REPORTS_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  audit-service-db:
+    image: postgres:18
+    container_name: hotelier-audit-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${AUDIT_POSTGRES_DB}
+      POSTGRES_USER: ${AUDIT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AUDIT_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - audit_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${AUDIT_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${AUDIT_POSTGRES_USER} -d ${AUDIT_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  dashboard-service-db:
+    image: postgres:18
+    container_name: hotelier-dashboard-service-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DASHBOARD_POSTGRES_DB}
+      POSTGRES_USER: ${DASHBOARD_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DASHBOARD_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - dashboard_service_db_data:/var/lib/postgresql/data
+    ports:
+      - "${DASHBOARD_POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DASHBOARD_POSTGRES_USER} -d ${DASHBOARD_POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: hotelier-rabbitmq-dev
@@ -382,6 +598,204 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  booking-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-booking-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      BOOKING_DATABASE_URL: postgresql://${BOOKING_POSTGRES_USER}:${BOOKING_POSTGRES_PASSWORD}@booking-service-db:5432/${BOOKING_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start booking-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      booking-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  operations-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-operations-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      OPERATIONS_DATABASE_URL: postgresql://${OPERATIONS_POSTGRES_USER}:${OPERATIONS_POSTGRES_PASSWORD}@operations-service-db:5432/${OPERATIONS_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start operations-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      operations-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  events-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-events-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      EVENTS_DATABASE_URL: postgresql://${EVENTS_POSTGRES_USER}:${EVENTS_POSTGRES_PASSWORD}@events-service-db:5432/${EVENTS_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start events-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      events-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  restaurant-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-restaurant-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      RESTAURANT_DATABASE_URL: postgresql://${RESTAURANT_POSTGRES_USER}:${RESTAURANT_POSTGRES_PASSWORD}@restaurant-service-db:5432/${RESTAURANT_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start restaurant-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      restaurant-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  recreational-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-recreational-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      RECREATIONAL_DATABASE_URL: postgresql://${RECREATIONAL_POSTGRES_USER}:${RECREATIONAL_POSTGRES_PASSWORD}@recreational-service-db:5432/${RECREATIONAL_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start recreational-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      recreational-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      notifications-service:
+        condition: service_started
+
+  billing-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-billing-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      BILLING_DATABASE_URL: postgresql://${BILLING_POSTGRES_USER}:${BILLING_POSTGRES_PASSWORD}@billing-service-db:5432/${BILLING_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start billing-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      billing-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  reports-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-reports-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      REPORTS_DATABASE_URL: postgresql://${REPORTS_POSTGRES_USER}:${REPORTS_POSTGRES_PASSWORD}@reports-service-db:5432/${REPORTS_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start reports-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      reports-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      booking-service:
+        condition: service_started
+      billing-service:
+        condition: service_started
+
+  audit-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-audit-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      AUDIT_DATABASE_URL: postgresql://${AUDIT_POSTGRES_USER}:${AUDIT_POSTGRES_PASSWORD}@audit-service-db:5432/${AUDIT_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start audit-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      audit-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  dashboard-service:
+    build:
+      context: ../hotelier-backend
+    container_name: hotelier-dashboard-service-dev
+    restart: unless-stopped
+    env_file:
+      - ../hotelier-backend/.env.docker
+    environment:
+      DASHBOARD_DATABASE_URL: postgresql://${DASHBOARD_POSTGRES_USER}:${DASHBOARD_POSTGRES_PASSWORD}@dashboard-service-db:5432/${DASHBOARD_POSTGRES_DB}
+    command: ["sh", "-c", "npx nest start dashboard-service --watch"]
+    volumes:
+      - ../hotelier-backend/apps:/app/apps
+      - ../hotelier-backend/libs:/app/libs
+      - /app/node_modules
+    depends_on:
+      dashboard-service-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      booking-service:
+        condition: service_started
+      billing-service:
+        condition: service_started
+      operations-service:
+        condition: service_started
+      guest-requests-service:
+        condition: service_started
+      staff-service:
+        condition: service_started
+      auth-service:
+        condition: service_started
+
   frontend:
     build:
       context: ../hotelier-frontend
@@ -409,4 +823,13 @@ volumes:
   inventory_service_db_data:
   staff_service_db_data:
   guest_requests_service_db_data:
+  booking_service_db_data:
+  operations_service_db_data:
+  events_service_db_data:
+  restaurant_service_db_data:
+  recreational_service_db_data:
+  billing_service_db_data:
+  reports_service_db_data:
+  audit_service_db_data:
+  dashboard_service_db_data:
   pgadmin_data:
