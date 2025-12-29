@@ -1,24 +1,4 @@
 services:
-  backend-db:
-    image: postgres:18
-    container_name: hotelier-backend-db-dev
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - backend_db_data:/var/lib/postgresql/data
-    ports:
-      - "${POSTGRES_PORT}:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-      start_period: 10s
-
   parking-service-db:
     image: postgres:18
     container_name: hotelier-parking-service-db-dev
@@ -432,13 +412,11 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     ports:
       - "5050:80"
-    depends_on:
-      - backend-db
 
-  backend:
+  api-gateway:
     build:
       context: ../hotelier-backend
-    container_name: hotelier-backend-dev
+    container_name: hotelier-api-gateway-dev
     restart: unless-stopped
     env_file:
       - ../hotelier-backend/.env.docker
@@ -451,12 +429,11 @@ services:
       - ../hotelier-backend/libs:/app/libs
       - /app/node_modules
     depends_on:
-      backend-db:
-        condition: service_healthy
       rabbitmq:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:${API_PORT}/api || exit 1"]
+      test:
+        ["CMD-SHELL", "curl -fsS http://localhost:${API_PORT}/api || exit 1"]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -815,11 +792,10 @@ services:
       - ../hotelier-frontend/src:/app/src
       - /app/node_modules
     depends_on:
-      backend:
+      api-gateway:
         condition: service_healthy
 
 volumes:
-  backend_db_data:
   auth_service_db_data:
   config_service_db_data:
   parking_service_db_data:
