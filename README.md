@@ -286,7 +286,7 @@ This repository is part of the Hotelier Suite portfolio project and primarily se
 
 ## 📄 License
 
-This project is private and for portfolio demonstration purposes.
+This project is open source and available for portfolio demonstration purposes.
 
 ---
 
