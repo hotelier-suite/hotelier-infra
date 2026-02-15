@@ -789,8 +789,9 @@ services:
     ports:
       - "${APP_PORT}:${APP_PORT}"
     volumes:
-      - ../hotelier-frontend/src:/app/src
+      - ../hotelier-frontend:/app
       - /app/node_modules
+      - /app/.next
     depends_on:
       api-gateway:
         condition: service_healthy
