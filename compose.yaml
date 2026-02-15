@@ -453,7 +453,7 @@ services:
     command: ["npx", "nest", "start", "auth-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - auth_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       auth-service-db:
         condition: service_healthy
@@ -474,7 +474,7 @@ services:
     command: ["npx", "nest", "start", "config-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - config_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       config-service-db:
         condition: service_healthy
@@ -495,7 +495,7 @@ services:
     command: ["npx", "nest", "start", "parking-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - parking_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       parking-service-db:
         condition: service_healthy
@@ -516,7 +516,7 @@ services:
     command: ["npx", "nest", "start", "notifications-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - notifications_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       notifications-service-db:
         condition: service_healthy
@@ -537,7 +537,7 @@ services:
     command: ["npx", "nest", "start", "staff-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - staff_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       staff-service-db:
         condition: service_healthy
@@ -558,7 +558,7 @@ services:
     command: ["npx", "nest", "start", "inventory-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - inventory_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       inventory-service-db:
         condition: service_healthy
@@ -579,7 +579,7 @@ services:
     command: ["npx", "nest", "start", "guest-requests-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - guest_requests_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       guest-requests-service-db:
         condition: service_healthy
@@ -600,7 +600,7 @@ services:
     command: ["npx", "nest", "start", "booking-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - booking_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       booking-service-db:
         condition: service_healthy
@@ -621,7 +621,7 @@ services:
     command: ["npx", "nest", "start", "operations-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - operations_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       operations-service-db:
         condition: service_healthy
@@ -642,7 +642,7 @@ services:
     command: ["npx", "nest", "start", "events-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - events_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       events-service-db:
         condition: service_healthy
@@ -663,7 +663,7 @@ services:
     command: ["npx", "nest", "start", "restaurant-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - restaurant_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       restaurant-service-db:
         condition: service_healthy
@@ -684,7 +684,7 @@ services:
     command: ["npx", "nest", "start", "recreational-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - recreational_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       recreational-service-db:
         condition: service_healthy
@@ -707,7 +707,7 @@ services:
     command: ["npx", "nest", "start", "billing-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - billing_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       billing-service-db:
         condition: service_healthy
@@ -728,7 +728,7 @@ services:
     command: ["npx", "nest", "start", "reports-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - reports_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       reports-service-db:
         condition: service_healthy
@@ -753,7 +753,7 @@ services:
     command: ["npx", "nest", "start", "audit-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - audit_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       audit-service-db:
         condition: service_healthy
@@ -774,7 +774,7 @@ services:
     command: ["npx", "nest", "start", "dashboard-service", "--watch", "--tsc"]
     volumes:
       - ../hotelier-backend:/app
-      - dashboard_service_node_modules:/app/node_modules
+      - /app/node_modules
     depends_on:
       dashboard-service-db:
         condition: service_healthy
@@ -830,19 +830,3 @@ volumes:
   audit_service_db_data:
   dashboard_service_db_data:
   pgadmin_data:
-  auth_service_node_modules:
-  config_service_node_modules:
-  parking_service_node_modules:
-  notifications_service_node_modules:
-  inventory_service_node_modules:
-  staff_service_node_modules:
-  guest_requests_service_node_modules:
-  booking_service_node_modules:
-  operations_service_node_modules:
-  events_service_node_modules:
-  restaurant_service_node_modules:
-  recreational_service_node_modules:
-  billing_service_node_modules:
-  reports_service_node_modules:
-  audit_service_node_modules:
-  dashboard_service_node_modules:
