@@ -448,11 +448,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       AUTH_DATABASE_URL: postgresql://${AUTH_POSTGRES_USER}:${AUTH_POSTGRES_PASSWORD}@auth-service-db:5432/${AUTH_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start auth-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "auth-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - auth_service_node_modules:/app/node_modules
     depends_on:
       auth-service-db:
         condition: service_healthy
@@ -468,11 +469,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       CONFIG_DATABASE_URL: postgresql://${CONFIG_POSTGRES_USER}:${CONFIG_POSTGRES_PASSWORD}@config-service-db:5432/${CONFIG_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start config-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "config-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - config_service_node_modules:/app/node_modules
     depends_on:
       config-service-db:
         condition: service_healthy
@@ -488,11 +490,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       PARKING_DATABASE_URL: postgresql://${PARKING_POSTGRES_USER}:${PARKING_POSTGRES_PASSWORD}@parking-service-db:5432/${PARKING_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start parking-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "parking-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - parking_service_node_modules:/app/node_modules
     depends_on:
       parking-service-db:
         condition: service_healthy
@@ -508,11 +511,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       NOTIFICATIONS_DATABASE_URL: postgresql://${NOTIFICATIONS_POSTGRES_USER}:${NOTIFICATIONS_POSTGRES_PASSWORD}@notifications-service-db:5432/${NOTIFICATIONS_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start notifications-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "notifications-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - notifications_service_node_modules:/app/node_modules
     depends_on:
       notifications-service-db:
         condition: service_healthy
@@ -528,11 +532,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       STAFF_DATABASE_URL: postgresql://${STAFF_POSTGRES_USER}:${STAFF_POSTGRES_PASSWORD}@staff-service-db:5432/${STAFF_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start staff-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "staff-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - staff_service_node_modules:/app/node_modules
     depends_on:
       staff-service-db:
         condition: service_healthy
@@ -548,11 +553,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       INVENTORY_DATABASE_URL: postgresql://${INVENTORY_POSTGRES_USER}:${INVENTORY_POSTGRES_PASSWORD}@inventory-service-db:5432/${INVENTORY_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start inventory-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "inventory-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - inventory_service_node_modules:/app/node_modules
     depends_on:
       inventory-service-db:
         condition: service_healthy
@@ -568,11 +574,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       GUEST_REQUESTS_DATABASE_URL: postgresql://${GUEST_REQUESTS_POSTGRES_USER}:${GUEST_REQUESTS_POSTGRES_PASSWORD}@guest-requests-service-db:5432/${GUEST_REQUESTS_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start guest-requests-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "guest-requests-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - guest_requests_service_node_modules:/app/node_modules
     depends_on:
       guest-requests-service-db:
         condition: service_healthy
@@ -588,11 +595,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       BOOKING_DATABASE_URL: postgresql://${BOOKING_POSTGRES_USER}:${BOOKING_POSTGRES_PASSWORD}@booking-service-db:5432/${BOOKING_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start booking-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "booking-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - booking_service_node_modules:/app/node_modules
     depends_on:
       booking-service-db:
         condition: service_healthy
@@ -608,11 +616,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       OPERATIONS_DATABASE_URL: postgresql://${OPERATIONS_POSTGRES_USER}:${OPERATIONS_POSTGRES_PASSWORD}@operations-service-db:5432/${OPERATIONS_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start operations-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "operations-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - operations_service_node_modules:/app/node_modules
     depends_on:
       operations-service-db:
         condition: service_healthy
@@ -628,11 +637,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       EVENTS_DATABASE_URL: postgresql://${EVENTS_POSTGRES_USER}:${EVENTS_POSTGRES_PASSWORD}@events-service-db:5432/${EVENTS_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start events-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "events-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - events_service_node_modules:/app/node_modules
     depends_on:
       events-service-db:
         condition: service_healthy
@@ -648,11 +658,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       RESTAURANT_DATABASE_URL: postgresql://${RESTAURANT_POSTGRES_USER}:${RESTAURANT_POSTGRES_PASSWORD}@restaurant-service-db:5432/${RESTAURANT_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start restaurant-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "restaurant-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - restaurant_service_node_modules:/app/node_modules
     depends_on:
       restaurant-service-db:
         condition: service_healthy
@@ -668,11 +679,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       RECREATIONAL_DATABASE_URL: postgresql://${RECREATIONAL_POSTGRES_USER}:${RECREATIONAL_POSTGRES_PASSWORD}@recreational-service-db:5432/${RECREATIONAL_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start recreational-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "recreational-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - recreational_service_node_modules:/app/node_modules
     depends_on:
       recreational-service-db:
         condition: service_healthy
@@ -690,11 +702,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       BILLING_DATABASE_URL: postgresql://${BILLING_POSTGRES_USER}:${BILLING_POSTGRES_PASSWORD}@billing-service-db:5432/${BILLING_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start billing-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "billing-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - billing_service_node_modules:/app/node_modules
     depends_on:
       billing-service-db:
         condition: service_healthy
@@ -710,11 +723,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       REPORTS_DATABASE_URL: postgresql://${REPORTS_POSTGRES_USER}:${REPORTS_POSTGRES_PASSWORD}@reports-service-db:5432/${REPORTS_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start reports-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "reports-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - reports_service_node_modules:/app/node_modules
     depends_on:
       reports-service-db:
         condition: service_healthy
@@ -734,11 +748,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       AUDIT_DATABASE_URL: postgresql://${AUDIT_POSTGRES_USER}:${AUDIT_POSTGRES_PASSWORD}@audit-service-db:5432/${AUDIT_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start audit-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "audit-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - audit_service_node_modules:/app/node_modules
     depends_on:
       audit-service-db:
         condition: service_healthy
@@ -754,11 +769,12 @@ services:
       - ../hotelier-backend/.env.docker
     environment:
       DASHBOARD_DATABASE_URL: postgresql://${DASHBOARD_POSTGRES_USER}:${DASHBOARD_POSTGRES_PASSWORD}@dashboard-service-db:5432/${DASHBOARD_POSTGRES_DB}
-    command: ["sh", "-c", "npx nest start dashboard-service --watch"]
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    command: ["npx", "nest", "start", "dashboard-service", "--watch", "--tsc"]
     volumes:
-      - ../hotelier-backend/apps:/app/apps
-      - ../hotelier-backend/libs:/app/libs
-      - /app/node_modules
+      - ../hotelier-backend:/app
+      - dashboard_service_node_modules:/app/node_modules
     depends_on:
       dashboard-service-db:
         condition: service_healthy
@@ -814,3 +830,19 @@ volumes:
   audit_service_db_data:
   dashboard_service_db_data:
   pgadmin_data:
+  auth_service_node_modules:
+  config_service_node_modules:
+  parking_service_node_modules:
+  notifications_service_node_modules:
+  inventory_service_node_modules:
+  staff_service_node_modules:
+  guest_requests_service_node_modules:
+  booking_service_node_modules:
+  operations_service_node_modules:
+  events_service_node_modules:
+  restaurant_service_node_modules:
+  recreational_service_node_modules:
+  billing_service_node_modules:
+  reports_service_node_modules:
+  audit_service_node_modules:
+  dashboard_service_node_modules:
